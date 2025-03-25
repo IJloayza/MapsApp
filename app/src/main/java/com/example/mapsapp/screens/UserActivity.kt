@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -18,10 +19,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHost
 import com.example.mapsapp.components.AppHeader
 import com.example.mapsapp.components.BottomNavigationBar
 import com.example.mapsapp.components.PrimaryButton
 import com.example.mapsapp.components.TextViewButtonStyle
+import com.example.mapsapp.navigation.Navigation
 import com.example.mapsapp.ui.theme.MapsAppTheme
 
 class UserActivity: ComponentActivity() {
@@ -29,6 +32,7 @@ class UserActivity: ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+            NavHost()
             MapsAppTheme {
                 UserScreen()
             }
@@ -52,13 +56,13 @@ class UserActivity: ComponentActivity() {
                         verticalArrangement = Arrangement.spacedBy(32.dp),
                         horizontalAlignment = Alignment.CenterHorizontally // Centra horizontalmente los hijos
                     ) {
-                        TextViewButtonStyle("User: Manolo López")
+                        TextViewButtonStyle("User: John Dou")
                         Spacer(modifier = Modifier.height(32.dp)) // Espacio entre botones
-                        TextViewButtonStyle("Email: 2023.LopezManu@gmail.com")
+                        TextViewButtonStyle("Email: JohnDou@gmail.com")
                         Spacer(modifier = Modifier.height(32.dp)) // Espacio entre botones
                         TextViewButtonStyle("Storage")
                         Spacer(modifier = Modifier.height(32.dp))
-                        PrimaryButton("Log Out") {  } //Retrofit logout
+                        PrimaryButton("Log Out", Modifier.fillMaxWidth()){} //Retrofit logout
                     }
                 }
             }

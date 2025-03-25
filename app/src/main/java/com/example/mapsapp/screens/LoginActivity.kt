@@ -66,6 +66,8 @@ class LoginActivity : ComponentActivity() {
 
     @Composable
     fun LoginForm(paddingValues: PaddingValues) {
+        var firstName by remember { mutableStateOf("") }
+        var lastName by remember { mutableStateOf("") }
         var email by remember { mutableStateOf("") }
         var password by remember { mutableStateOf("") }
 
@@ -77,16 +79,40 @@ class LoginActivity : ComponentActivity() {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             SpacerVertical(32)
-            Text(text = "Email", fontSize = 20.sp, fontWeight = Bold)
+            Text(text = "First Name", fontSize = 20.sp, fontWeight = Bold)
 
             // Email Input
+            TextField(
+                value = firstName,
+                onValueChange = { firstName = it },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp),
+                placeholder = { Text(text = "John", color = Color.Gray) }
+            )
+
+            Text(text = "Last Name", fontSize = 20.sp, fontWeight = Bold)
+
+            // Password Input
+            TextField(
+                value = lastName,
+                onValueChange = { lastName = it },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp),
+                placeholder = { Text(text = "Dou", color = Color.Gray) },
+            )
+
+            Text(text = "Email", fontSize = 20.sp, fontWeight = Bold)
+
+            // Password Input
             TextField(
                 value = email,
                 onValueChange = { email = it },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 8.dp),
-                placeholder = { Text(text = "Value", color = Color.Gray) }
+                placeholder = { Text(text = "JohnDou@gmail.com", color = Color.Gray) },
             )
 
             Text(text = "Password", fontSize = 20.sp, fontWeight = Bold)
@@ -98,11 +124,16 @@ class LoginActivity : ComponentActivity() {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 8.dp),
-                placeholder = { Text(text = "Value", color = Color.Gray) },
+                placeholder = { Text(text = "56fgKFcj%", color = Color.Gray) },
                 visualTransformation = PasswordVisualTransformation()
             )
 
-            PrimaryButton("Sign In") {  }
+            PrimaryButton("Log In", Modifier.fillMaxWidth()){
+                //Si se ha reconocido al usuario se activa el apartado user y te redirige a UserActivity
+                if (userViewModel.isSuccesfull()){
+
+                }
+            }
             // Forgot Password Link
             Text(
                 text = "Forgot password?",

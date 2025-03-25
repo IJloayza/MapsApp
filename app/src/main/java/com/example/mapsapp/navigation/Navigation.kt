@@ -15,7 +15,7 @@ fun Navigation() {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = Login){
         composable<Login>{
-            LoginActivity()
+            LoginActivity(){navController.navigate()}
         }
         composable<Settings>{
             SettingsActivity()

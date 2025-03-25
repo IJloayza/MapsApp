@@ -24,6 +24,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.mapsapp.components.AppHeader
@@ -84,7 +85,7 @@ class Signin : ComponentActivity() {
                         visualTransformation = PasswordVisualTransformation()
                     )
 
-                    PrimaryButton("Sign In") {  }
+                    PrimaryButton("Sign In", Modifier.weight(1f)){}
                     // Forgot Password Link
                     Text(
                         text = "Forgot password?",
@@ -99,5 +100,13 @@ class Signin : ComponentActivity() {
                 }
             }
         )
+    }
+
+    @Preview
+    @Composable
+    fun PreviewSettingsScreen() {
+        MapsAppTheme {
+            SigninScreen()
+        }
     }
 }

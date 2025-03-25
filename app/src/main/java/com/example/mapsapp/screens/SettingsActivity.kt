@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -64,8 +64,8 @@ fun SettingsScreen(){
                         modifier = Modifier.fillMaxWidth(), // Ocupar ancho disponible
                         horizontalArrangement = Arrangement.SpaceEvenly // Espaciado entre los botones
                     ){
-                        PrimaryButton("Dark") { }
-                        PrimaryButton("Light") { }
+                        PrimaryButton("Dark", Modifier.weight(1f)) { }
+                        PrimaryButton("Light", Modifier.weight(1f)) {}
                     }
                     TextViewButtonStyle("Storage")
                     SpacerVertical(16)
@@ -73,13 +73,13 @@ fun SettingsScreen(){
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceEvenly
                     ){
-                        PrimaryButton("Storage") { }
-                        PrimaryButton("Quantity") { }
+                        PrimaryButton("Storage", Modifier.weight(1f)){}
+                        PrimaryButton("Quantity", Modifier.weight(1f)){}
                     }
                     SpacerVertical(16)
                     TextViewButtonStyle("Language")
                     SpacerVertical(16)
-                    PrimaryButton("English") { }
+                    PrimaryButton("English", Modifier.fillMaxWidth()){}
                 }
             }
         }
