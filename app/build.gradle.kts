@@ -63,6 +63,11 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.navigation.compose)
     implementation(libs.kotlinx.serialization.json)
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+    implementation(libs.lyfecycleandroid)
+    implementation(libs.http.interceptor)
+    implementation(libs.jwtdecode)
     //Iconos de la app
     implementation(libs.androidx.material.icons.extended)
     implementation(libs.androidx.ui.text.google.fonts)

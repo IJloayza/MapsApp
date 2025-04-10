@@ -1,5 +1,6 @@
 [versions]
 agp = "8.9.0"
+jwtdecode = "2.0.2"
 kotlin = "1.9.0"
 coreKtx = "1.15.0"
 junit = "4.13.2"
@@ -12,6 +13,10 @@ materialIconsExtended = "1.7.7"
 uiTextGoogleFonts = "1.7.6"
 navigationCompose = "2.8.2"
 serialization = "1.6.3"
+retrofit = "2.11.0"
+converter = "2.9.0"
+lifecycle = "2.6.2"
+interceptor = "4.11.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -30,9 +35,13 @@ androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-man
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 androidx-ui-text-google-fonts = { group = "androidx.compose.ui", name = "ui-text-google-fonts", version.ref = "uiTextGoogleFonts"}
+jwtdecode = { module = "com.auth0.android:jwtdecode", version.ref = "jwtdecode" }
 navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization"}
-
+retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
+converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converter" }
+lyfecycleandroid = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycle"}
+http-interceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "interceptor"}
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

@@ -1,9 +1,5 @@
 package com.example.mapsapp.screens
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,30 +15,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHost
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.mapsapp.components.AppHeader
-import com.example.mapsapp.components.BottomNavigationBar
 import com.example.mapsapp.components.PrimaryButton
 import com.example.mapsapp.components.TextViewButtonStyle
-import com.example.mapsapp.navigation.Navigation
+import com.example.mapsapp.navigation.BottomNavigationBar
+import com.example.mapsapp.navigation.User
 import com.example.mapsapp.ui.theme.MapsAppTheme
 
-class UserActivity: ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContent {
-            NavHost()
-            MapsAppTheme {
-                UserScreen()
-            }
-        }
-    }
+
     @Composable
-    fun UserScreen(){
+    fun UserScreen(navController: NavController){
         Scaffold(
-            topBar = { AppHeader("User") },      // Barra superior
-            bottomBar = { BottomNavigationBar() }, // Barra inferior
+            topBar = { AppHeader("User", navController) },
+            bottomBar = { BottomNavigationBar(navController) },
             content = { paddingValues ->
                 Box(
                     modifier = Modifier
@@ -71,9 +58,9 @@ class UserActivity: ComponentActivity() {
 
     @Preview
     @Composable
-    fun PreviewSettingsScreen() {
+    fun PreviewUserScreen() {
         MapsAppTheme {
-            UserScreen()
+            val fakeNavController = rememberNavController()
+            UserScreen(fakeNavController)
         }
     }
-}

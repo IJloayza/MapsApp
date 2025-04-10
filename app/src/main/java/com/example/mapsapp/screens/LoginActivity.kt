@@ -1,9 +1,5 @@
 package com.example.mapsapp.screens
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -28,28 +24,21 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.mapsapp.components.AppHeader
-import com.example.mapsapp.components.BottomNavigationBar
 import com.example.mapsapp.components.PrimaryButton
 import com.example.mapsapp.components.SpacerVertical
+import com.example.mapsapp.navigation.BottomNavigationBar
+import com.example.mapsapp.navigation.User
 import com.example.mapsapp.ui.theme.MapsAppTheme
 
-class LoginActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContent {
-            MapsAppTheme {
-                LoginScreen()
-            }
-        }
-    }
 
     @Composable
-    fun LoginScreen(){
+    fun LoginScreen(navController: NavController) {
         Scaffold (
-            topBar = { AppHeader("Log In") },      // Barra superior
-            bottomBar = { BottomNavigationBar() }, // Barra inferior
+            topBar = { AppHeader("Log In", navController) },      // Barra superior
+            bottomBar = { BottomNavigationBar(navController) }, // Barra inferior
             content = { paddingValues ->
                 LoginForm(paddingValues)
             }
@@ -60,7 +49,8 @@ class LoginActivity : ComponentActivity() {
     @Composable
     fun PreviewLoginScreen() {
         MapsAppTheme {
-            LoginScreen()
+            val fakeNavController = rememberNavController()
+            LoginScreen(fakeNavController)
         }
     }
 
@@ -130,9 +120,9 @@ class LoginActivity : ComponentActivity() {
 
             PrimaryButton("Log In", Modifier.fillMaxWidth()){
                 //Si se ha reconocido al usuario se activa el apartado user y te redirige a UserActivity
-                if (userViewModel.isSuccesfull()){
-
-                }
+//                if (userViewModel.isSuccesfull()){
+//
+//                }
             }
             // Forgot Password Link
             Text(
@@ -147,4 +137,3 @@ class LoginActivity : ComponentActivity() {
             )
         }
     }
-}

@@ -1,9 +1,5 @@
 package com.example.mapsapp.screens
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -27,86 +23,78 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.mapsapp.components.AppHeader
-import com.example.mapsapp.components.BottomNavigationBar
 import com.example.mapsapp.components.PrimaryButton
 import com.example.mapsapp.components.SpacerVertical
+import com.example.mapsapp.navigation.BottomNavigationBar
+import com.example.mapsapp.navigation.User
 import com.example.mapsapp.ui.theme.MapsAppTheme
 
-class Signin : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContent {
-            MapsAppTheme {
-                SigninScreen()
-            }
-        }
-    }
+@Composable
+fun SigninScreen(navController: NavController){
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    Scaffold (
+        topBar = { AppHeader("Sign In", navController) },      // Barra superior
+        bottomBar = { BottomNavigationBar(navController) }, // Barra inferior
+        content = { paddingValues ->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                SpacerVertical(32)
+                Text(text = "Email", fontSize = 20.sp, fontWeight = Bold)
 
-    @Composable
-    fun SigninScreen(){
-        var email by remember { mutableStateOf("") }
-        var password by remember { mutableStateOf("") }
-        Scaffold (
-            topBar = { AppHeader("Sign In") },      // Barra superior
-            bottomBar = { BottomNavigationBar() }, // Barra inferior
-            content = { paddingValues ->
-                Column(
+                // Email Input
+                TextField(
+                    value = email,
+                    onValueChange = { email = it },
                     modifier = Modifier
-                        .fillMaxSize()
-                        .padding(paddingValues),
-                    verticalArrangement = Arrangement.spacedBy(16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    SpacerVertical(32)
-                    Text(text = "Email", fontSize = 20.sp, fontWeight = Bold)
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp),
+                    placeholder = { Text(text = "Value", color = Color.Gray) }
+                )
 
-                    // Email Input
-                    TextField(
-                        value = email,
-                        onValueChange = { email = it },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 8.dp),
-                        placeholder = { Text(text = "Value", color = Color.Gray) }
-                    )
+                Text(text = "Password", fontSize = 20.sp, fontWeight = Bold)
 
-                    Text(text = "Password", fontSize = 20.sp, fontWeight = Bold)
+                // Password Input
+                TextField(
+                    value = password,
+                    onValueChange = { password = it },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp),
+                    placeholder = { Text(text = "Value", color = Color.Gray) },
+                    visualTransformation = PasswordVisualTransformation()
+                )
 
-                    // Password Input
-                    TextField(
-                        value = password,
-                        onValueChange = { password = it },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 8.dp),
-                        placeholder = { Text(text = "Value", color = Color.Gray) },
-                        visualTransformation = PasswordVisualTransformation()
-                    )
-
-                    PrimaryButton("Sign In", Modifier.weight(1f)){}
-                    // Forgot Password Link
-                    Text(
-                        text = "Forgot password?",
-                        modifier = Modifier
-                            .padding(top = 16.dp)
-                            .clickable { /* Acción para recuperar contraseña */ },
-                        fontSize = 14.sp,
-                        fontWeight = Bold,
-                        color = Color.Black,
-                        textDecoration = TextDecoration.Underline
-                    )
-                }
+                PrimaryButton("Sign In", Modifier.weight(1f)){}
+                // Forgot Password Link
+                Text(
+                    text = "Forgot password?",
+                    modifier = Modifier
+                        .padding(top = 16.dp)
+                        .clickable { /* Acción para recuperar contraseña */ },
+                    fontSize = 14.sp,
+                    fontWeight = Bold,
+                    color = Color.Black,
+                    textDecoration = TextDecoration.Underline
+                )
             }
-        )
-    }
-
-    @Preview
-    @Composable
-    fun PreviewSettingsScreen() {
-        MapsAppTheme {
-            SigninScreen()
         }
+    )
+}
+
+@Preview
+@Composable
+fun PreviewSignInScreen() {
+    MapsAppTheme {
+        val fakeNavController = rememberNavController()
+        SigninScreen(fakeNavController)
     }
 }
