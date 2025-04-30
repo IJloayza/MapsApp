@@ -1,5 +1,7 @@
 package com.example.mapsapp
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -15,16 +17,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.mapsapp.components.AppHeader
 import com.example.mapsapp.navigation.BottomNavigationBar
 import com.example.mapsapp.navigation.NavigationWrapper
-import com.example.mapsapp.navigation.User
 import com.example.mapsapp.ui.theme.MapsAppTheme
 
 class MainActivity() : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        //Verificar los permisos para poder usar el internet
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.INTERNET), 0)
+        }
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {

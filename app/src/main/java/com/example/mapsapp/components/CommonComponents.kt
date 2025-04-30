@@ -45,6 +45,8 @@ fun AppHeader(title: String, navController: NavController) {
             containerColor = MaterialTheme.colorScheme.primary
         ),
         actions = {
+            //Por alguna razon en este navigate se pierde la ruta a User
+            //¿Se sobreescribe la ruta Home?
             IconButton(onClick = { navController.navigate(User) }) {
                 Icon(Icons.Default.Person, contentDescription = "User navigation from header",
                     tint = MaterialTheme.colorScheme.onPrimary,

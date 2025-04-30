@@ -68,6 +68,9 @@ dependencies {
     implementation(libs.lyfecycleandroid)
     implementation(libs.http.interceptor)
     implementation(libs.jwtdecode)
+    //OpenStreetMaps
+    implementation(libs.osmdroid)
+    implementation(libs.http.client)
     //Iconos de la app
     implementation(libs.androidx.material.icons.extended)
     implementation(libs.androidx.ui.text.google.fonts)

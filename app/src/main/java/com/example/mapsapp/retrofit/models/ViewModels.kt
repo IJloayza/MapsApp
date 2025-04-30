@@ -8,11 +8,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.auth0.android.jwt.JWT
-import com.example.mapsapp.retrofit.RetrofitManager
+import com.example.mapsapp.retrofit.RetrofitPicotrakeManager
 import kotlinx.coroutines.launch
-import retrofit2.Response
-import retrofit2.http.Body
-import retrofit2.http.Header
 
 class UserViewModel(application: Application) : AndroidViewModel(application) {
     private val _user = MutableLiveData<User?>()
@@ -21,7 +18,7 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
     fun getUserByEmail(email: String) {
         viewModelScope.launch {
             try {
-                val response = RetrofitManager.instance.getUserByEmail(email)
+                val response = RetrofitPicotrakeManager.instance.getUserByEmail(email)
                 if (response.isSuccessful) {
                     val user = response.body()
                     Log.d("Retrofit", "User: $user")
@@ -40,7 +37,7 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
     fun postUser(userCreate: UserCreate){
         viewModelScope.launch {
             try {
-                val response = RetrofitManager.instance.createUser(userCreate)
+                val response = RetrofitPicotrakeManager.instance.createUser(userCreate)
                 if (response.isSuccessful) {
                     Log.d("Retrofit", "User: ")
                 } else {
@@ -57,7 +54,7 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             try {
 
-                val response = RetrofitManager.instance.deleteUser(token, userToDelete)
+                val response = RetrofitPicotrakeManager.instance.deleteUser(token, userToDelete)
                 if (response.isSuccessful) {
                     Log.d("Retrofit", "User eliminado")
                 } else {
@@ -72,7 +69,7 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
     fun updatePassword(token: String, request: UpdatePasswordRequest) {
         viewModelScope.launch {
             try {
-                val response = RetrofitManager.instance.updatePassword(token, request)
+                val response = RetrofitPicotrakeManager.instance.updatePassword(token, request)
                 if (response.isSuccessful) {
                     Log.d("Retrofit", "La password ha sido actualizada")
                 } else {
@@ -87,7 +84,7 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
     fun resetPassword(request: ResetPasswordRequest){
         viewModelScope.launch {
             try {
-                val response = RetrofitManager.instance.resetPassword(request)
+                val response = RetrofitPicotrakeManager.instance.resetPassword(request)
                 if (response.isSuccessful) {
                     Log.d("Retrofit", "La password ha sido reiniciada")
                 } else {
@@ -102,7 +99,7 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
     fun loginUser(loginRequest: LoginRequest) {
         viewModelScope.launch {
             try {
-                val response = RetrofitManager.instance.loginUser(loginRequest)
+                val response = RetrofitPicotrakeManager.instance.loginUser(loginRequest)
                 if (response.isSuccessful) {
                     val loginResponse = response.body()
                     Log.d("Retrofit", "Login Response: $loginResponse")
