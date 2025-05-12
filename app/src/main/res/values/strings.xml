@@ -1,3 +1,36 @@
 <resources>
+
     <string name="app_name">MapsApp</string>
+
+    <string name="login">Log In</string>
+    <string name="logout">Log Out</string>
+    <string name="signup">Sign Up</string>
+    <string name="user">User</string>
+    <string name="settings">Settings</string>
+
+    <string name="firstname">First Name</string>
+    <string name="lastname">Last Name</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="appereance">Appeareance</string>
+    <string name="themeto">Theme to</string>
+    <string name="light">Light</string>
+    <string name="dark">Dark</string>
+    <string name="close">Close</string>
+    <string name="forgotpassword">Forgot password?</string>
+    <string name="search">Search place...</string>
+
+    <string name="testUserName">John</string>
+    <string name="testUserLastName">Doe</string>
+    <string name="testUserEmail">JohnDou@gmail.com</string>
+    <string name="testUserPassword">Password must be at least 6 characters long</string>
+
+    <string name="UserUnknown">Invalid Credentials</string>
+    <string name="NoAllFields">Please fill in all fields</string>
+    <string name="ExpiredToken">Expired token. Please make log in.</string>
+    <string name="registeredsince">Registered since</string>
+    <string name="NoRegistered">You must be registered to see information about User</string>
+
+    <string name="HeaderWelcome">Welcome!</string>
+    <string name="language">Language</string>
 </resources>

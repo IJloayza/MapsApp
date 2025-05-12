@@ -28,7 +28,6 @@ data class SuscripcionAnuncio(
     val num_veces_mostrado: Int
 )
 
-// 🔒 Seguridad y JWT
 @Serializable
 data class UserCreate(
     val nombre: String,

@@ -6,10 +6,10 @@ import kotlinx.serialization.Serializable
 object Login
 
 @Serializable
-object Settings
+object SignUp
 
 @Serializable
-object Main
+object Settings
 
 @Serializable
 object Home

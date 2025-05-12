@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">MapsApp</string>
+    <string name="login">Iniciar sesión</string>
+    <string name="logout">Cerrar sesión</string>
+    <string name="signup">Registrarse</string>
+    <string name="user">Usuario</string>
+    <string name="settings">Configuración</string>
+    <string name="firstname">Nombre</string>
+    <string name="lastname">Apellido</string>
+    <string name="email">Correo electrónico</string>
+    <string name="password">Contraseña</string>
+    <string name="appereance">Apariencia</string>
+    <string name="themeto">Tema a</string>
+    <string name="light">Claro</string>
+    <string name="dark">Oscuro</string>
+    <string name="close">Cerrar</string>
+    <string name="forgotpassword">¿Olvidaste la contraseña?</string>
+    <string name="search">Buscar lugar...</string>
+    <string name="testUserName">Juan</string>
+    <string name="testUserLastName">Pérez</string>
+    <string name="testUserEmail">juanperez@gmail.com</string>
+    <string name="testUserPassword">La contraseña debe tener al menos 6 caracteres</string>
+    <string name="UserUnknown">Credenciales inválidas</string>
+    <string name="NoAllFields">Por favor completa todos los campos</string>
+    <string name="ExpiredToken">Token expirado. Por favor inicia sesión.</string>
+    <string name="registeredsince">Registrado desde</string>
+    <string name="NoRegistered">Debes estar registrado para ver la información del usuario</string>
+    <string name="HeaderWelcome">¡Bienvenido!</string>
+    <string name="language">Idioma</string>
+</resources>

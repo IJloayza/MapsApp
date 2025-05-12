@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">MapsApp</string>
+    <string name="login">Inicia sessió</string>
+    <string name="logout">Tanca sessió</string>
+    <string name="signup">Registra\'t</string>
+    <string name="user">Usuari</string>
+    <string name="settings">Configuració</string>
+    <string name="firstname">Nom</string>
+    <string name="lastname">Cognom</string>
+    <string name="email">Correu electrònic</string>
+    <string name="password">Contrasenya</string>
+    <string name="appereance">Aparença</string>
+    <string name="themeto">Canvia a</string>
+    <string name="light">Clar</string>
+    <string name="dark">Fosc</string>
+    <string name="close">Tanca</string>
+    <string name="forgotpassword">Has oblidat la contrasenya?</string>
+    <string name="search">Cercar lloc...</string>
+    <string name="testUserName">Joan</string>
+    <string name="testUserLastName">Garcia</string>
+    <string name="testUserEmail">joangarcia@gmail.com</string>
+    <string name="testUserPassword">La contrasenya ha de tenir almenys 6 caràcters</string>
+    <string name="UserUnknown">Credencials no vàlides</string>
+    <string name="NoAllFields">Si us plau, omple tots els camps</string>
+    <string name="ExpiredToken">Token caducat. Inicia sessió, si us plau.</string>
+    <string name="registeredsince">Registrat des de</string>
+    <string name="NoRegistered">Cal estar registrat per veure la informació de l\'usuari</string>
+    <string name="HeaderWelcome">Benvingut!</string>
+    <string name="language">Idioma</string>
+</resources>

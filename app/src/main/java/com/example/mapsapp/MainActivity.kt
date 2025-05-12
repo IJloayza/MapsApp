@@ -1,6 +1,7 @@
 package com.example.mapsapp
 
 import android.Manifest
+import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -14,17 +15,22 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.mapsapp.components.AppHeader
-import com.example.mapsapp.navigation.BottomNavigationBar
+import com.example.mapsapp.components.BottomNavigationBar
 import com.example.mapsapp.navigation.NavigationWrapper
+import com.example.mapsapp.components.LocaleManager
 import com.example.mapsapp.ui.theme.MapsAppTheme
+import com.example.mapsapp.ui.theme.ThemeViewModel
 
 class MainActivity() : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,12 +41,22 @@ class MainActivity() : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            MapsAppTheme {
+            val themeViewModel: ThemeViewModel = viewModel()
+            val isDarkTheme by themeViewModel.isDarkTheme.collectAsState()
+            //Pasando el tema actual a partir de un viewModel para manejo global del tema
+            MapsAppTheme(darkTheme = isDarkTheme) {
                 NavigationWrapper()
             }
         }
     }
+
+    //Cambiar el Manager general de Android por mi LocalManager
+    override fun attachBaseContext(newBase: Context?) {
+        super.attachBaseContext(LocaleManager.applyLocale(newBase!!))
+    }
 }
+
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -71,8 +87,8 @@ fun MainScreen(navController: NavController) {
 @Preview(showBackground = true)
 @Composable
 fun PreviewWelcomeScreen() {
-    MapsAppTheme {
+    MapsAppTheme(darkTheme = false) {
         val fakeNavController = rememberNavController()
-        MainScreen(fakeNavController)
+        MainScreen(navController = fakeNavController)
     }
 }

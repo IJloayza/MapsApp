@@ -62,6 +62,8 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.navigation.compose)
+    implementation(libs.compose.foundation)
+    implementation(libs.compose.livedata)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
@@ -71,6 +73,7 @@ dependencies {
     //OpenStreetMaps
     implementation(libs.osmdroid)
     implementation(libs.http.client)
+    implementation(libs.geojson)
     //Iconos de la app
     implementation(libs.androidx.material.icons.extended)
     implementation(libs.androidx.ui.text.google.fonts)

@@ -5,8 +5,10 @@ import com.example.mapsapp.retrofit.models.DeleteUser
 import com.example.mapsapp.retrofit.models.HistorialActividad
 import com.example.mapsapp.retrofit.models.LoginRequest
 import com.example.mapsapp.retrofit.models.LoginResponse
+import com.example.mapsapp.retrofit.models.Mountain
 import com.example.mapsapp.retrofit.models.ResetPasswordRequest
 import com.example.mapsapp.retrofit.models.Route
+import com.example.mapsapp.retrofit.models.SuscriptionType
 import com.example.mapsapp.retrofit.models.UpdatePasswordRequest
 import com.example.mapsapp.retrofit.models.UpdateRoute
 import com.example.mapsapp.retrofit.models.UpdateSuscription
@@ -35,11 +37,14 @@ import javax.net.ssl.X509TrustManager
 interface RetrofitPicotrakeService {
 
     //USUARIOS REQUEST
-    @GET("/usuarios/")
-    suspend fun getUser(@Header("Authorization") token: String):Response<User?>
+    @GET("/usuarios/{id_usuario}")
+    suspend fun getUser(@Path("id_usuario")id: Int):Response<User?>
 
     @GET("/usuarios/{email:str}")
     suspend fun getUserByEmail(@Path("email:str") userEmail:String):Response<User?>
+
+    @GET("/usuario/suscription/")
+    suspend fun getUserSuscription(@Header("Authorization") token: String): Response<SuscriptionType>
 
     @POST("/usuarios")
     suspend fun createUser(@Body user: UserCreate):Response<Any>
@@ -102,7 +107,12 @@ interface RetrofitPicotrakeService {
     suspend fun deleteRouteHistorial(@Path("nombre_ruta") name: String): Response<Any>
 
     //ANUNCIOS REQUEST
-    //No necesarios
+    //MONTAÑAS
+    @GET("/mountains/")
+    suspend fun getMountains(): Response<List<Mountain>>
+
+    @GET("/mountains/{nombre_montanya}")
+    suspend fun getMountainByName(@Path("nombre_montanya") name: String): Response<Mountain>
 }
 
 object RetrofitPicotrakeManager{
