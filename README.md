@@ -1,1 +1,1 @@
-[![Ver documentación](https://deepwiki.com/IJloayza/MapsApp)
+[Ver documentación](https://deepwiki.com/IJloayza/MapsApp)
