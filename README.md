@@ -1,1 +1,1 @@
-[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/IJloayza/MapsApp)
+[![Ver documentación](https://deepwiki.com/IJloayza/MapsApp)
