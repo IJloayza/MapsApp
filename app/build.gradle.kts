@@ -74,6 +74,7 @@ dependencies {
     implementation(libs.osmdroid)
     implementation(libs.http.client)
     implementation(libs.geojson)
+    implementation(libs.locationgms)
     //Iconos de la app
     implementation(libs.androidx.material.icons.extended)
     implementation(libs.androidx.ui.text.google.fonts)

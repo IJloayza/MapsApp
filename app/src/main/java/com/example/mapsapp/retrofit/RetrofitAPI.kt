@@ -116,7 +116,7 @@ interface RetrofitPicotrakeService {
 }
 
 object RetrofitPicotrakeManager{
-    private const val BASE_URL = "https://picotrakeclub.tech"
+    private const val BASE_URL = "https://api.picotrakeclub.tech"
 
     //Desde aqui es posible colocar timeouts a las respuestas o asignar un Token si la app necesita uno
     private val client = getUnsafeOkHttpClient()

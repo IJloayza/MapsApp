@@ -11,7 +11,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -45,92 +47,72 @@ import com.example.mapsapp.R
 @Composable
 fun UserScreen(navController: NavController) {
     val context = LocalContext.current
-    var userViewModel: UserViewModel = viewModel()
-    var authViewModel: AuthTokenJWTViewModel = viewModel()
+    val userViewModel: UserViewModel = viewModel()
+    val authViewModel: AuthTokenJWTViewModel = viewModel()
     val user by userViewModel.user.observeAsState()
     val authState by authViewModel.authState.collectAsState()
 
-    // Obtener el token desde SharedPreferences
     val sharedPref = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
     val userId = sharedPref.getInt("userId", -1)
     val token = sharedPref.getString("accessToken", null)
 
-    // Cargar el usuario si está autenticado y aún no se ha hecho
+    // Cargar usuario una sola vez cuando se autentique
     LaunchedEffect(authState) {
-        if (authState == AuthState.AUTHENTICATED && user == null) {
-            token?.let {
-                try {
-                    val jwt = JWT(it)
-                    //de JWT debo extraer el sub de ahi el Int id de usuario y ya poder hacer un getUserById(id)
-                    if (userId != -1) {
-                        userViewModel.getUser(userId)
-                    }else{
-                        Log.e("UserScreen", "Error reading JWT: No userId found")
-                    }
-                } catch (e: Exception) {
-                    Log.e("UserScreen", "Error reading JWT: ${e.message}")
-                }
-            }
+        if (authState == AuthState.AUTHENTICATED && user == null && userId != -1) {
+            userViewModel.getUser(userId)
         }
     }
 
     Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = { AppHeader(stringResource(R.string.user), navController) },
         bottomBar = { BottomNavigationBar(navController) }
     ) { paddingValues ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues),
+                .padding(paddingValues)
+                .padding(8.dp),
             contentAlignment = Alignment.Center
         ) {
-            when (authState) {
-                AuthState.AUTHENTICATED -> {
-                    val currentUser = user
-                    //Mirar solo currentUser ya que by no asegura que llegue el user hasta el siguiente uso
-                    //Decido no usar el logOut del viewModel para eliminar al usuario sino solo cambiar las preferencias y olvidar el token
-                    if (currentUser != null) {
-                        Column(
-                            modifier = Modifier.width(300.dp),
-                            verticalArrangement = Arrangement.spacedBy(32.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            TextViewButtonStyle(stringResource(R.string.user)+ currentUser.nombre)
-                            TextViewButtonStyle(stringResource(R.string.email)+ currentUser.email)
-                            TextViewButtonStyle(stringResource(R.string.registeredsince) + currentUser.fecha_registro)
-                            PrimaryButton(stringResource(R.string.logout), Modifier.fillMaxWidth()) {
+            val contentModifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
+
+            Column(
+                modifier = contentModifier,
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                when (authState) {
+                    AuthState.AUTHENTICATED -> {
+                        if (user != null) {
+                            TextViewButtonStyle(stringResource(R.string.user) + ": " + user!!.nombre)
+                            TextViewButtonStyle(stringResource(R.string.email) + ": "+ user!!.email)
+                            TextViewButtonStyle(stringResource(R.string.registeredsince) + ": "+ user!!.fecha_registro)
+                            PrimaryButton(stringResource(R.string.logout), Modifier.fillMaxWidth().height(60.dp)) {
                                 authViewModel.logout()
                                 navController.navigate(Login) {
                                     popUpTo(0)
                                 }
                             }
+                        } else {
+                            CircularProgressIndicator()
                         }
-                    } else {
-                        CircularProgressIndicator()
                     }
-                }
 
-                AuthState.EXPIRED -> {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
+                    AuthState.EXPIRED -> {
                         Text(stringResource(R.string.ExpiredToken))
-                        Spacer(modifier = Modifier.height(16.dp))
-                        PrimaryButton(stringResource(R.string.login), Modifier.fillMaxWidth()) {
+                        PrimaryButton(stringResource(R.string.login), Modifier.fillMaxWidth().height(60.dp)) {
                             navController.navigate(Login) {
                                 popUpTo(User) { inclusive = true }
                             }
                         }
                     }
-                }
 
-                AuthState.UNAUTHENTICATED -> {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
+                    AuthState.UNAUTHENTICATED -> {
                         Text(stringResource(R.string.NoRegistered))
-                        Spacer(modifier = Modifier.height(16.dp))
-                        PrimaryButton(stringResource(R.string.signup), Modifier.fillMaxWidth()) {
+                        PrimaryButton(stringResource(R.string.signup), Modifier.fillMaxWidth().height(60.dp)) {
                             navController.navigate(SignUp) {
                                 popUpTo(User) { inclusive = true }
                             }

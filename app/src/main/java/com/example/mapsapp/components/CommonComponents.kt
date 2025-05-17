@@ -59,7 +59,6 @@ import com.example.mapsapp.ui.theme.MapsAppTheme
 fun AppHeader(title: String, navController: NavController) {
     val jwtViewModel: AuthTokenJWTViewModel = viewModel()
     val authState by jwtViewModel.authState.collectAsState()
-
     TopAppBar(
         title = {
             Text(
@@ -176,7 +175,7 @@ fun TextViewButtonStyle(text: String){
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .wrapContentHeight()
+            .height(56.dp)
             .shadow(8.dp, shape = RoundedCornerShape(8.dp))
             .background(MaterialTheme.colorScheme.primary, shape = RoundedCornerShape(24.dp)),
         contentAlignment = Alignment.Center

@@ -1,11 +1,14 @@
 package com.example.mapsapp.screens
 
+import android.Manifest
 import android.content.Context
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.preference.PreferenceManager
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -15,22 +18,39 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.MyLocation
+import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.core.app.ActivityCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.ColorUtils
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -45,12 +65,11 @@ import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.Polygon
 import org.osmdroid.views.overlay.Polyline
-import java.io.BufferedReader
-import java.io.InputStreamReader
-import kotlin.sequences.forEach
 import com.example.mapsapp.R
 import com.example.mapsapp.retrofit.models.Mountain
 import com.example.mapsapp.retrofit.models.MountainViewModel
+import com.google.android.gms.location.LocationServices
+import org.osmdroid.views.CustomZoomButtonsController
 
 @Composable
 fun MapsScreen(navController: NavController) {
@@ -64,6 +83,9 @@ fun MapsScreen(navController: NavController) {
     val mountainViewModel: MountainViewModel = viewModel()
     val mountains by mountainViewModel.mountains
 
+    val fusedLocationClient = remember {
+        LocationServices.getFusedLocationProviderClient(context)
+    }
     //Los valores predeterminados del mapa son cargados con remember
     //Para evitar volver a construirlo innecesariamente urante ejecución
     val mapView = remember {
@@ -72,9 +94,14 @@ fun MapsScreen(navController: NavController) {
             setMultiTouchControls(true)
             controller.setZoom(9.0)
             controller.setCenter(GeoPoint(41.8, 2.2))
+
+            minZoomLevel = 5.0
+            maxZoomLevel = 18.0
+            zoomController.setVisibility(CustomZoomButtonsController.Visibility.NEVER)
         }
     }
-    var selectedFeatureName by remember { mutableStateOf<String?>(null) }
+
+    var selectedMountain by remember { mutableStateOf<Mountain?>(null) }
     var markerDestination: Marker? by remember { mutableStateOf(null) }
 
     LaunchedEffect(mountains) {
@@ -82,7 +109,12 @@ fun MapsScreen(navController: NavController) {
             mountain.geojson?.let { jsonElement ->
                 try {
                     val geoJsonObject = JSONObject(jsonElement.toString())
-                    parseMountainGeoJsonAndAddToMap(mapView, geoJsonObject, mountain)
+                    parseMountainGeoJsonAndAddToMap(
+                        mapView,
+                        geoJsonObject,
+                        mountain,
+                        onPolygonClick = { selectedMountain = mountain }
+                    )
                 } catch (e: Exception) {
                     Log.e("MountainGeoJSON", "Error parsing mountain geojson", e)
                 }
@@ -91,7 +123,9 @@ fun MapsScreen(navController: NavController) {
     }
 
     val viewModel: MapViewModel = viewModel()
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column(
+        modifier = Modifier.fillMaxSize()
+    ) {
 
         // Buscador
         searchField(viewModel)
@@ -143,17 +177,40 @@ fun MapsScreen(navController: NavController) {
             }
         }
         // Mostrar un Alert Dialog al picar en un area con poligono
-        if (selectedFeatureName != null) {
+        if (selectedMountain != null) {
             AlertDialog(
-                onDismissRequest = { selectedFeatureName = null },
+                onDismissRequest = { selectedMountain = null },
                 confirmButton = {
-                    Button(onClick = { selectedFeatureName = null }) {
+                    Button(onClick = { selectedMountain = null }) {
                         Text(stringResource(R.string.close))
                     }
                 },
                 //Debo inflar aqui los datos de la montaña o parque natural recuperado
-                title = { Text("Parque Natural") },
-                text = { Text("Nombre: ${selectedFeatureName}") }
+                title = { Text(text = selectedMountain?.nombre_montanya ?: stringResource(R.string.mountainName)) },
+                text = {
+                    Box(
+                        modifier = Modifier
+                            .heightIn(max = 300.dp) // Limita la altura máxima
+                            .verticalScroll(rememberScrollState())
+                    ) {
+                        Column(
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            //Obliga a comprobar si la montaña seleccionada existe antes de usar los valores
+                            selectedMountain?.let { mountain ->
+                                mountain.descripcion?.let {
+                                    Text(text = stringResource(R.string.mountainDescription) + ": $it")
+                                }
+                                mountain.dificultad?.let {
+                                    Text(text = stringResource(R.string.mountainDificulty) + ": $it")
+                                }
+                                Text(text = stringResource(R.string.campingAllowed) + ": ${if (mountain.acampar) stringResource(R.string.afirmation) else stringResource(R.string.negation)}")
+                                Text(text = stringResource(R.string.sleepingAllowed) + ": ${if (mountain.pernoctar) stringResource(R.string.afirmation) else stringResource(R.string.negation)}")
+                                Text(text = stringResource(R.string.dangerousSpecies) + ": ${if (mountain.especies_peligrosas) stringResource(R.string.afirmation) else stringResource(R.string.negation)}")
+                            }
+                        }
+                    }
+                }
             )
         }
         // Mapa
@@ -167,46 +224,101 @@ fun MapsScreen(navController: NavController) {
         }
 
         // Botones
-        buttonsMap(navController, mapView)
+        Row(
+            modifier = Modifier
+                .background(MaterialTheme.colorScheme.onPrimary)
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.spacedBy(50.dp),
+
+        ) {
+            FloatingActionButton(
+                onClick = { mapView.controller.zoomIn() },
+                containerColor = MaterialTheme.colorScheme.primary) {
+                Icon(Icons.Default.Add, contentDescription = "Zoom in")
+            }
+            FloatingActionButton(
+                onClick = { mapView.controller.zoomOut() },
+                containerColor = MaterialTheme.colorScheme.primary) {
+                Icon(Icons.Default.Remove, contentDescription = "Zoom out")
+            }
+            FloatingActionButton(
+                onClick = { navController.navigate(Home){ popUpTo(Home) } },
+                containerColor = MaterialTheme.colorScheme.primary) {
+                Icon(Icons.Default.Home, contentDescription = "Go to Home")
+            }
+            FloatingActionButton(onClick = {
+                // Pedir ubicación actual
+                if (ActivityCompat.checkSelfPermission(
+                        context, Manifest.permission.ACCESS_FINE_LOCATION
+                    ) == PackageManager.PERMISSION_GRANTED
+                ) {
+                    fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+                        location?.let {
+                            val userLocation = GeoPoint(it.latitude, it.longitude)
+                            mapView.controller.animateTo(userLocation)
+                        }
+                    }
+                } else {
+                    Toast.makeText(context, "Permiso de ubicación no concedido", Toast.LENGTH_SHORT).show()
+                }
+            },
+                containerColor = MaterialTheme.colorScheme.primary) {
+                Icon(Icons.Default.MyLocation, contentDescription = "Go to Current Location")
+            }
+        }
     }
 }
 
 //Programar un debounce para esperar unos milis antes de empezar la busqueda hasta que el usuario haya acabado de escribir
 @Composable
 fun searchField(viewModel: MapViewModel){
+    val searchText by viewModel.searchText.collectAsState()
+
     OutlinedTextField(
-        value = viewModel.searchText,
-        onValueChange = { viewModel.onSearchTextChange(it)},
+        value = searchText,
+        onValueChange = { viewModel.onSearchTextChange(it) },
         label = { Text(stringResource(R.string.search)) },
         singleLine = true,
         modifier = Modifier
             .fillMaxWidth()
             .heightIn(max = 200.dp)
-            .padding(8.dp)
-    )
-}
-
-@Composable
-fun buttonsMap(navController: NavController, mapView: MapView){
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
             .padding(8.dp),
-        horizontalArrangement = Arrangement.SpaceEvenly
-    ) {
-        Button(onClick = { navController.navigate(Home) }) { Text("Inicio") }
-        Button(onClick = { mapView.controller.zoomIn() }) { Text("+") }
-        Button(onClick = { mapView.controller.zoomOut() }) { Text("-") }
-    }
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedContainerColor = MaterialTheme.colorScheme.primary,
+            unfocusedContainerColor = MaterialTheme.colorScheme.primary,
+            focusedTextColor = MaterialTheme.colorScheme.onPrimary,
+            unfocusedTextColor = MaterialTheme.colorScheme.onPrimary,
+            cursorColor = MaterialTheme.colorScheme.onPrimary,
+            focusedLabelColor = MaterialTheme.colorScheme.onPrimary,
+            unfocusedLabelColor = MaterialTheme.colorScheme.onPrimary
+        ),
+        trailingIcon = {
+            if (searchText.isNotEmpty()) {
+                IconButton(onClick = { viewModel.onSearchTextChange("") }) {
+                    Icon(
+                        imageVector = Icons.Default.Close,
+                        contentDescription = "Boton para borrar el contenido",
+                        tint = MaterialTheme.colorScheme.onPrimary
+                    )
+                }
+            }
+        }
+    )
+
 }
 
-fun parseMountainGeoJsonAndAddToMap(mapView: MapView, geoJson: JSONObject, mountain: Mountain) {
+fun parseMountainGeoJsonAndAddToMap(
+    mapView: MapView,
+    geoJson: JSONObject,
+    mountain: Mountain,
+    onPolygonClick: () -> Unit
+) {
     if (geoJson.getString("type") != "FeatureCollection") {
         Log.e("MountainGeoJSON", "Invalid format: not a FeatureCollection")
         return
     }
 
-    val color = mountainColor(mountain) // Asumimos esta función devuelve un Int (color)
+    val color = mountainColor(mountain)
 
     val features = geoJson.getJSONArray("features")
     for (i in 0 until features.length()) {
@@ -216,11 +328,25 @@ fun parseMountainGeoJsonAndAddToMap(mapView: MapView, geoJson: JSONObject, mount
 
         when (geometryType) {
             "Polygon" -> {
-                val polygon = parsePolygonWithColor(geometry, feature, mapView.context, mountain.nombre_montanya ?: "Desconocido", color)
+                val polygon = parsePolygonWithColor(
+                    geometry,
+                    feature,
+                    mapView.context,
+                    mountain.nombre_montanya ?: "Desconocido",
+                    color,
+                    onPolygonClick
+                )
                 mapView.overlays.add(polygon)
             }
             "MultiPolygon" -> {
-                parseMultiPolygonWithColor(geometry, feature, mapView, mountain.nombre_montanya ?: "Desconocido", color)
+                parseMultiPolygonWithColor(
+                    geometry,
+                    feature,
+                    mapView,
+                    mountain.nombre_montanya ?: "Desconocido",
+                    color,
+                    onPolygonClick
+                )
             }
             "LineString", "MultiLineString" -> {
                 val polyline = parseLineGeometry(geometry, color)
@@ -267,7 +393,8 @@ fun parsePolygonWithColor(
     feature: JSONObject,
     context: Context,
     name: String,
-    color: Int
+    color: Int,
+    onPolygonClick: () -> Unit
 ): Polygon {
     val coordinates = geometry.getJSONArray("coordinates").getJSONArray(0)
     val geoPoints = mutableListOf<GeoPoint>()
@@ -278,24 +405,26 @@ fun parsePolygonWithColor(
 
     val polygon = Polygon()
     polygon.setPoints(geoPoints)
-    polygon.fillColor = ColorUtils.setAlphaComponent(color, 100) // semitransparente
+    polygon.fillColor = ColorUtils.setAlphaComponent(color, 100)
     polygon.strokeColor = color
     polygon.strokeWidth = 4f
 
     polygon.setOnClickListener { _, _, _ ->
-        Toast.makeText(context, name, Toast.LENGTH_SHORT).show()
+        onPolygonClick()
         true
     }
 
     return polygon
 }
 
+
 fun parseMultiPolygonWithColor(
     geometry: JSONObject,
     feature: JSONObject,
     mapView: MapView,
     name: String,
-    color: Int
+    color: Int,
+    onPolygonClick: () -> Unit
 ) {
     val coordinates = geometry.getJSONArray("coordinates")
     for (i in 0 until coordinates.length()) {
@@ -313,7 +442,7 @@ fun parseMultiPolygonWithColor(
         polygon.strokeWidth = 4f
 
         polygon.setOnClickListener { _, _, _ ->
-            Toast.makeText(mapView.context, name, Toast.LENGTH_SHORT).show()
+            onPolygonClick()
             true
         }
 

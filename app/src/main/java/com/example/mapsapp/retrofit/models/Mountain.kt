@@ -1,7 +1,6 @@
 package com.example.mapsapp.retrofit.models
 
 import com.google.gson.JsonObject
-import android.graphics.Color
 
 data class Mountain(
     val nombre_montanya: String?,

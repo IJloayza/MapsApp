@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -47,6 +48,7 @@ import com.example.mapsapp.ui.theme.ThemeViewModel
 @Composable
     fun LoginScreen(navController: NavController) {
         Scaffold (
+            containerColor = MaterialTheme.colorScheme.background,
             topBar = { AppHeader(stringResource(R.string.login), navController) },      // Barra superior
             bottomBar = { BottomNavigationBar(navController) }, // Barra inferior
             content = { paddingValues ->

@@ -8,6 +8,15 @@
     <string name="user">User</string>
     <string name="settings">Settings</string>
 
+    <string name="new_route_title">New Route in the Pyrenees!</string>
+    <string name="new_route_description">Explore a new high mountain adventure. Ideal for intermediate and expert hikers.</string>
+    <string name="advice_camping_title">Tips for Safe Camping</string>
+    <string name="advice_camping_description">Discover our recommendations to fully and safely enjoy your experience.</string>
+    <string name="best_summer_mountains_title">Best Mountains for Summer</string>
+    <string name="best_summer_mountains_description">Discover the coolest peaks to visit this summer and avoid extreme heat.</string>
+    <string name="ideal_equipment_title">Take the Ideal Equipment!</string>
+    <string name="ideal_equipment_description">Check out our top backpacks and accessories for your next excursion.</string>
+
     <string name="firstname">First Name</string>
     <string name="lastname">Last Name</string>
     <string name="email">Email</string>
@@ -24,6 +33,15 @@
     <string name="testUserLastName">Doe</string>
     <string name="testUserEmail">JohnDou@gmail.com</string>
     <string name="testUserPassword">Password must be at least 6 characters long</string>
+    <string name="mountainName">Name</string>
+    <string name="mountainDescription">Description</string>
+    <string name="mountainDificulty">Difficulty</string>
+    <string name="campingAllowed">Camping Allowed</string>
+    <string name="sleepingAllowed">Sleeping Allowed</string>
+    <string name="dangerousSpecies">Dangerous Species</string>
+    <string name="afirmation">Yes</string>
+    <string name="negation">No</string>
+    <string name="learnmore">Learn more</string>
 
     <string name="UserUnknown">Invalid Credentials</string>
     <string name="NoAllFields">Please fill in all fields</string>
