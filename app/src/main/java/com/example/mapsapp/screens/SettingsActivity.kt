@@ -98,15 +98,17 @@ fun SettingsScreen(navController: NavController, themeViewModel: ThemeViewModel)
 @Composable
 fun LanguageDropdown(context: Context) {
     val sharedPref = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
-    var currentLanguage = sharedPref.getString("language", null)
-    if (currentLanguage == null) {
-        currentLanguage = "English"
-    }
+    val savedLanguage = sharedPref.getString("language", "en") ?: "en"
     val languages = listOf("en" to "English", "es" to "Español", "fr" to "Français", "ca" to "Català")
+
+    var currentLanguage by remember { mutableStateOf(savedLanguage) }
     var expanded by remember { mutableStateOf(false) }
 
     Box {
-        PrimaryButton(languages.first { it.first == currentLanguage }.second, Modifier.fillMaxWidth().height(56.dp)) {
+        PrimaryButton(
+            text = languages.firstOrNull { it.first == currentLanguage }?.second ?: "English",
+            modifier = Modifier.fillMaxWidth().height(56.dp)
+        ) {
             expanded = true
         }
 

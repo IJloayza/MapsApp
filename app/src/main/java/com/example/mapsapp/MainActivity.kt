@@ -6,9 +6,11 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -51,6 +53,18 @@ import com.example.mapsapp.ui.theme.MapsAppTheme
 import com.example.mapsapp.ui.theme.ThemeViewModel
 
 class MainActivity() : ComponentActivity() {
+    private val locationPermissionRequest =
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+            val fineLocationGranted = permissions[Manifest.permission.ACCESS_FINE_LOCATION] ?: false
+            val coarseLocationGranted = permissions[Manifest.permission.ACCESS_COARSE_LOCATION] ?: false
+
+            if (fineLocationGranted || coarseLocationGranted) {
+                // Permís concedit
+            } else {
+                Toast.makeText(this, "Permiso de localizacion rechazado", Toast.LENGTH_SHORT).show()
+            }
+        }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         //Verificar los permisos para poder usar el internet
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED) {
@@ -58,6 +72,12 @@ class MainActivity() : ComponentActivity() {
         }
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        locationPermissionRequest.launch(
+            arrayOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            )
+        )
         setContent {
             val themeViewModel: ThemeViewModel = viewModel()
             val isDarkTheme by themeViewModel.isDarkTheme.collectAsState()
