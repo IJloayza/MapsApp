@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
@@ -226,43 +227,57 @@ fun MapsScreen(navController: NavController) {
         // Botones
         Row(
             modifier = Modifier
+                .fillMaxWidth()
                 .background(MaterialTheme.colorScheme.onPrimary)
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.spacedBy(50.dp),
-
+                .padding(horizontal = 8.dp, vertical = 12.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
+            val fabModifier = Modifier
+                .weight(1f)
+
             FloatingActionButton(
                 onClick = { mapView.controller.zoomIn() },
-                containerColor = MaterialTheme.colorScheme.primary) {
+                containerColor = MaterialTheme.colorScheme.primary,
+                modifier = fabModifier
+            ) {
                 Icon(Icons.Default.Add, contentDescription = "Zoom in")
             }
+
             FloatingActionButton(
                 onClick = { mapView.controller.zoomOut() },
-                containerColor = MaterialTheme.colorScheme.primary) {
+                containerColor = MaterialTheme.colorScheme.primary,
+                modifier = fabModifier
+            ) {
                 Icon(Icons.Default.Remove, contentDescription = "Zoom out")
             }
+
             FloatingActionButton(
-                onClick = { navController.navigate(Home){ popUpTo(Home) } },
-                containerColor = MaterialTheme.colorScheme.primary) {
+                onClick = { navController.navigate(Home) { popUpTo(Home) } },
+                containerColor = MaterialTheme.colorScheme.primary,
+                modifier = fabModifier
+            ) {
                 Icon(Icons.Default.Home, contentDescription = "Go to Home")
             }
-            FloatingActionButton(onClick = {
-                // Pedir ubicación actual
-                if (ActivityCompat.checkSelfPermission(
-                        context, Manifest.permission.ACCESS_FINE_LOCATION
-                    ) == PackageManager.PERMISSION_GRANTED
-                ) {
-                    fusedLocationClient.lastLocation.addOnSuccessListener { location ->
-                        location?.let {
-                            val userLocation = GeoPoint(it.latitude, it.longitude)
-                            mapView.controller.animateTo(userLocation)
+
+            FloatingActionButton(
+                onClick = {
+                    if (ActivityCompat.checkSelfPermission(
+                            context, Manifest.permission.ACCESS_FINE_LOCATION
+                        ) == PackageManager.PERMISSION_GRANTED
+                    ) {
+                        fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+                            location?.let {
+                                val userLocation = GeoPoint(it.latitude, it.longitude)
+                                mapView.controller.animateTo(userLocation)
+                            }
                         }
+                    } else {
+                        Toast.makeText(context, "Permiso de ubicación no concedido", Toast.LENGTH_SHORT).show()
                     }
-                } else {
-                    Toast.makeText(context, "Permiso de ubicación no concedido", Toast.LENGTH_SHORT).show()
-                }
-            },
-                containerColor = MaterialTheme.colorScheme.primary) {
+                },
+                containerColor = MaterialTheme.colorScheme.primary,
+                modifier = fabModifier
+            ) {
                 Icon(Icons.Default.MyLocation, contentDescription = "Go to Current Location")
             }
         }
